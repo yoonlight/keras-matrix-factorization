@@ -1,7 +1,6 @@
 from movielens_dataset import load
 from src.model import MF
-from keras import metrics
-from keras.utils.all_utils import plot_model
+from keras import metrics, layers
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -10,15 +9,17 @@ x, y, num_words_dict, columns = load.load_data()
 user_dim = num_words_dict["user_id"]
 item_dim = num_words_dict["movie_id"]
 
+inputs=[layers.Input((1, )), layers.Input((1, ))]
+
 model = MF(user_dim=user_dim, item_dim=item_dim)
 model.compile(optimizer="SGD", loss="mse", metrics=[
               metrics.RootMeanSquaredError()])
+
+model.summary(inputs=inputs, expand_nested=True)
+model.plot_model(inputs=inputs)
+
 history = model.fit(x=[x["user_id"], x["movie_id"]], y=y,
-                    epochs=10, validation_split=0.33, batch_size=100, verbose=1)
-
-model.summary()
-
-plot_model(model)
+                    epochs=5, validation_split=0.33, batch_size=100, verbose=1)
 
 y_val_loss = history.history['val_loss']
 y_loss = history.history['loss']
