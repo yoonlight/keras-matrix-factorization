@@ -6,7 +6,7 @@ from keras.utils.all_utils import plot_model
 def get_input_model(name: str, input_dim: int = 1000, output_dim: int = 64):
     input_model = Sequential([
         layers.Embedding(input_dim=input_dim, output_dim=output_dim,
-                         name=f"{name}_embedding"),
+                         embeddings_regularizer="l2", name=f"{name}_embedding"),
         layers.Flatten()
     ], name=f"{name}_model")
     return input_model
@@ -15,18 +15,26 @@ def get_input_model(name: str, input_dim: int = 1000, output_dim: int = 64):
 class MF(Model):
     def __init__(self, user_dim: int, item_dim: int, output_dim: int = 8):
         super(MF, self).__init__()
-        self.user_vector = get_input_model(
-            input_dim=user_dim, output_dim=output_dim)
-        self.item_vector = get_input_model(
-            input_dim=item_dim, output_dim=output_dim)
-        self.inner_product = layers.Dot(axes=1)
+        self.user_vector = get_input_model(name="user",
+                                           input_dim=user_dim, output_dim=output_dim)
+        self.user_bias = layers.Embedding(
+            input_dim=user_dim, output_dim=1, embeddings_regularizer="l2", name="user_bias")
+        self.item_vector = get_input_model(name="item",
+                                           input_dim=item_dim, output_dim=output_dim)
+        self.item_bias = layers.Embedding(
+            input_dim=item_dim, output_dim=1, embeddings_regularizer="l2", name="item_bias")
+        self.dot_product = layers.Dot(axes=1)
+        self.add_layer = layers.Add()
         self.predict_layer = layers.Dense(
             1, kernel_regularizer="l2", bias_regularizer="l2")
 
     def call(self, inputs):
         user = self.user_vector(inputs[0])
         item = self.item_vector(inputs[1])
-        x = self.inner_product([user, item])
+        user_bias = self.user_bias(inputs[0])
+        item_bias = self.item_bias(inputs[1])
+        dotted = self.dot_product([user, item])
+        x = self.add_layer([dotted, user_bias, item_bias])
         return self.predict_layer(x)
 
     def build_graph(self, inputs):
