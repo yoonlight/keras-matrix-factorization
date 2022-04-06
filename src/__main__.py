@@ -1,9 +1,9 @@
 from movielens_dataset import load
 from src.model import MF
 from keras import metrics, layers
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.model_selection import train_test_split
+from common.plot import plot
 
 X, y, num_words_dict, columns = load.load_data()
 
@@ -32,12 +32,4 @@ y_loss = history.history['loss']
 x_len = np.arange(len(y_loss))
 y_test_loss = np.full(x_len.shape, test_results[0])
 
-plt.plot(x_len, y_val_loss, marker='.', c='red', label="Validation-set Loss")
-plt.plot(x_len, y_loss, marker='.', c='blue', label="Train-set Loss")
-
-plt.legend(loc='upper right')
-plt.grid()
-plt.xlabel('epoch')
-plt.ylabel('loss')
-plt.savefig(fname="result")
-plt.show()
+plot(x_len, y_loss, y_val_loss, y_test_loss)
