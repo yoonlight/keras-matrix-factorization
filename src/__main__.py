@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from common.plot import plot
 
-X, y, num_words_dict, columns = load.load_data()
+X, y, num_words_dict, columns, _ = load.load_data()
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.1, random_state=42)
