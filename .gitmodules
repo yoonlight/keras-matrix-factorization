@@ -1,5 +1,5 @@
 [submodule "movielens_dataset"]
-	path = movielens_dataset
+	path = dataset
 	url = https://github.com/yoonlight/movielens_dataset
 [submodule "common"]
 	path = common
