@@ -1,6 +1,6 @@
 from dataset import movielens
 from src.model import MF
-from keras import metrics, layers
+from keras import metrics, layers, callbacks
 import numpy as np
 from sklearn.model_selection import train_test_split
 from common.plot import plot
@@ -23,7 +23,7 @@ model.summary(inputs=inputs, expand_nested=True)
 model.plot_model(inputs=inputs)
 
 history = model.fit([X_train["user_id"], X_train["movie_id"]], y_train,
-                    epochs=5, validation_split=0.33, batch_size=100, verbose=1)
+                    epochs=50, validation_split=0.33, batch_size=100, verbose=1, callbacks=[callbacks.EarlyStopping(patience=5)])
 
 test_results = model.evaluate([X_test["user_id"], X_test["movie_id"]], y_test)
 
