@@ -27,7 +27,7 @@ class MF(Base):
         self.dot_product = layers.Dot(axes=1)
         self.add_layer = layers.Add()
         self.predict_layer = layers.Dense(
-            1, kernel_regularizer="l2", bias_regularizer="l2")
+            1, activation="sigmoid", kernel_regularizer=L2(l2=0.001), bias_regularizer=L2(l2=0.001))
 
     def call(self, inputs):
         user = self.user_vector(inputs[0])
@@ -36,4 +36,5 @@ class MF(Base):
         item_bias = self.item_bias(inputs[1])
         dotted = self.dot_product([user, item])
         x = self.add_layer([dotted, user_bias, item_bias])
+        x = layers.Flatten()(x)
         return self.predict_layer(x)
