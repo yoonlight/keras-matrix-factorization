@@ -16,8 +16,8 @@ item_dim = num_words_dict["movie_id"]
 inputs=[layers.Input((1, )), layers.Input((1, ))]
 
 model = MF(user_dim=user_dim, item_dim=item_dim)
-              metrics.RootMeanSquaredError()])
 model.compile(optimizer="SGD", loss="binary_crossentropy", metrics=[
+              metrics.RootMeanSquaredError(), metrics.AUC()])
 
 model.summary(inputs=inputs, expand_nested=True)
 model.plot_model(inputs=inputs)
