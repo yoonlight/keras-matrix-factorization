@@ -13,7 +13,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 user_dim = num_words_dict["user_id"]
 item_dim = num_words_dict["movie_id"]
 
-inputs=[layers.Input((1, )), layers.Input((1, ))]
+inputs = [layers.Input((1, )), layers.Input((1, ))]
 
 model = MF(user_dim=user_dim, item_dim=item_dim)
 model.compile(optimizer="SGD", loss="binary_crossentropy", metrics=[
