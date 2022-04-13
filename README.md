@@ -1,5 +1,7 @@
 # keras-matrix-factorization
 
+Implement Matrix Factorzation using Keras (Tensorflow 2.0)
+
 ## Command
 
 ```shell
